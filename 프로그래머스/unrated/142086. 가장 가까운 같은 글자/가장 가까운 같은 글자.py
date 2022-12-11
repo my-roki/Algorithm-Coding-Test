@@ -1,13 +1,13 @@
 def solution(s):
     answer = []
-    check = {}
+    alphabet = {}
 
     for word in s:
-        if word not in check:
+        if word not in alphabet:
             answer.append(-1)
         else:
-            answer.append(check[word])
-        check[word] = 0
-        check = {i: check[i] + 1 for i in check}
+            answer.append(alphabet[word])
+        alphabet[word] = 0
+        alphabet = {i: alphabet[i] + 1 for i in alphabet}
 
     return answer
