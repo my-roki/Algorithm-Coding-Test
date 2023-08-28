@@ -1,10 +1,20 @@
-from itertools import product
-
-
 def solution(word):
-    words_list = []
-    for i in range(1, 6):
-        words_list += list(map("".join, product("AEIOU", repeat=i)))
+    dictionary = []
+    make_dictionary(dictionary, 0, "")
+    return dictionary.index(word) + 1
 
-    words_list.sort()
-    return words_list.index(word) + 1
+
+def make_dictionary(dictionary, length, word):
+    if length > 5:
+        return dictionary
+    if word != "":
+        dictionary.append(word)
+    for i in ["A", "E", "I", "O", "U"]:
+        make_dictionary(dictionary, length + 1, word + i)
+
+
+if __name__ == "__main__":
+    print(solution("AAAAE"))  # 6
+    print(solution("AAAE"))  # 10
+    print(solution("I"))  # 1563
+    print(solution("EIO"))  # 1189
