@@ -1,50 +1,47 @@
 import sys
 
 
-def time_to_sec(str_time):
-    m, s = str_time.split(":")
+def min_to_sec(m: str | int, s: str | int) -> int:
     return int(m) * 60 + int(s)
 
 
-def sec_to_time(sec_time):
-    m = sec_time // 60
-    s = sec_time % 60
-    return "{:02d}:{:02d}".format(m, s)
+def sec_to_min(s: int) -> str:
+    return f"{str(s//60).zfill(2)}:{str(s % 60).zfill(2)}"
 
 
-N = sys.stdin.readline().rstrip()
+if __name__ == "__main__":
+    N = int(sys.stdin.readline())
 
+    # team = [score, win time]
+    team_1 = [0, 0]
+    team_2 = [0, 0]
+    prev = 0
+    for _ in range(N):
+        win, goal_time = sys.stdin.readline().split()
+        goal_time_sec = min_to_sec(goal_time[:2], goal_time[3:])
 
-before = 0
-a_score = 0
-b_score = 0
-a_time = 0
-b_time = 0
+        # 시간 정산
+        if team_1[0] > team_2[0]:
+            team_1[1] += goal_time_sec - prev
+        elif team_2[0] > team_1[0]:
+            team_2[1] += goal_time_sec - prev
+        else:
+            pass
+        prev = goal_time_sec
 
-for i in range(int(N)):
-    N, M = map(str, sys.stdin.readline().split())
-    M = time_to_sec(M)
-    if a_score > b_score:
-        a_time += M - before
-    elif a_score < b_score:
-        b_time += M - before
+        # 골 정산
+        if win == "1":
+            team_1[0] += 1
+        else:
+            team_2[0] += 1
     else:
-        pass
+        # 종료시 시간 정산
+        if team_1[0] > team_2[0]:
+            team_1[1] += min_to_sec(48, 0) - prev
+        elif team_2[0] > team_1[0]:
+            team_2[1] += min_to_sec(48, 0) - prev
+        else:
+            pass
 
-    if N == "1":
-        a_score += 1
-    else:
-        b_score += 1
-
-    before = M
-
-if a_score > b_score:
-    a_time += time_to_sec("48:00") - before
-elif a_score < b_score:
-    b_time += time_to_sec("48:00") - before
-else:
-    pass
-
-
-print(sec_to_time(a_time))
-print(sec_to_time(b_time))
+    print(sec_to_min(team_1[1]))
+    print(sec_to_min(team_2[1]))
